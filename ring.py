@@ -38,7 +38,7 @@ class HashRing():
                 while pos in occupied:
                     # print("Node", node, "experienced ", str(hashAttempt), "th hash conflict. Trying alternate hash.")
                     hashAttempt += 1
-                    pos = self.getHash(nodeId + '_' + str(hashAttempt))
+                    pos = self.getHash(nodeId + '_' + str(hashCount) + '_' + str(hashAttempt))
                 
                 nodePositions.append((pos, node))
                 occupied.add(pos)
