@@ -14,7 +14,7 @@ class HashRing():
     def addNode(self, node):
         print("Adding Node", node)
         self.nodes.append(node)
-        self.recalculateSlotMapping()
+        self.recalculateSlotMapping(10)
 
     
     def removeNode(self, node):
@@ -24,23 +24,22 @@ class HashRing():
     def getHash(self, key):
         return hash(key) % self.capacity
 
-    def recalculateSlotMapping(self):
-
+    def recalculateSlotMapping(self, numHashes = 1):
         occupied = set([])
         nodePositions = []
         for node in self.nodes:
             nodeId = str(node.getId())
 
-            
-            hashAttempt = 0
-            pos = self.getHash(nodeId + '_' + str(hashAttempt))
-            while pos in occupied:
-                print("Node", node, "experienced ", str(hashAttempt), "th hash conflict. Trying alternate hash.")
-                hashAttempt += 1
-                pos = self.getHash(nodeId + '_' + str(hashAttempt))
-            
-            nodePositions.append((pos, node))
-            occupied.add(pos)
+            for hashCount in range(numHashes):
+                hashAttempt = 0
+                pos = self.getHash(nodeId + '_' + str(hashCount) + '_' + str(hashAttempt))
+                while pos in occupied:
+                    print("Node", node, "experienced ", str(hashAttempt), "th hash conflict. Trying alternate hash.")
+                    hashAttempt += 1
+                    pos = self.getHash(nodeId + '_' + str(hashAttempt))
+                
+                nodePositions.append((pos, node))
+                occupied.add(pos)
                     
         self.nodePositions = sorted(nodePositions, key = lambda x: x[0])
 
@@ -62,11 +61,20 @@ class HashRing():
             print("Slot", i, ":", "Node", self.slotMapping[i].getId())
 
     
-    def getLoadFactor(self):
+
+    def printNodeLoads(self):
         ctr = Counter()
         for i in range(self.capacity):
             ctr[self.slotMapping[i].getId()] += 1
         print(ctr)
+
+
+    def getLoadFactor(self):
+        ctr = Counter()
+        for i in range(self.capacity):
+            ctr[self.slotMapping[i].getId()] += 1
+        for key in ctr.keys():
+            print("Load on Node", key, ":", 1.0*ctr[key]/self.capacity)
 
     def printNodeMapping(self):
         for nodePos in self.nodePositions:

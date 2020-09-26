@@ -12,9 +12,18 @@ if __name__ == '__main__':
     
     print("Nodes:", len(ring.getNodes()))
 
-    print("Slot Mapping:", ring.printSlots())
-    print("Node Mapping:", ring.printNodeMapping())
-    print("Load factor:", ring.getLoadFactor())
+    print("\nSlot Mapping:")
+    ring.printSlots()
     
+    print("\nNode Mapping:")
+    ring.printNodeMapping()
+    
+    print("\nLoads:")
+    ring.printNodeLoads()
+
+    print("\nLoad factor:")
+    print(ring.getLoadFactor())
+    
+
 
 
